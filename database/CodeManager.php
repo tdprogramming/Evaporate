@@ -2,6 +2,7 @@
 
 require_once "Connector.php";
 require_once "Session.php";
+require_once "ProductManager.php";
 
 class CodeManager {
     private $connection;
@@ -39,7 +40,6 @@ class CodeManager {
         $preparedQuery->bind_param('sdsdd', $codeString, $productId, $batchName, $batchId, $timeStamp);
         
         for ($i = 0; $i < $numCodes; $i++) {
-            $codeIndex++;
             $codeString = substr(md5(rand()), 0, 7);
             $preparedQuery->execute();
         }
@@ -113,7 +113,7 @@ class CodeManager {
                 $result .= "----------------------------------------------<br /><br />";
                 $result .= "Your download code is: " . $code . "<br /><br />";
                 $result .= "<br /><br />";
-                $result .= "Go to " . $this->producManager->getRedeemLink() . " to redeem your code.<br /><br />";
+                $result .= "Go to " . $this->productManager->getRedeemLink() . " to redeem your code.<br /><br />";
             }
         }
         

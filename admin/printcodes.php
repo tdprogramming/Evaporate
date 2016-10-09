@@ -9,7 +9,9 @@ if (isset($_GET["productid"])) {
 $codeManager = new CodeManager();
 
 if (isset($_GET["batchid"])) {
-    $codeManager->printCodes($_GET["batchid"]);
+    $result = $codeManager->printCodes($_GET["batchid"]);
+    echo $result;
+    die();
 }
 
 $codeBatchesArray = $codeManager->fetchAllCodeBatches();

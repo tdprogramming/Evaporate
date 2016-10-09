@@ -20,7 +20,7 @@ Codes generated successfully. <a href="printcodes.php">Click here</a> to view an
   
     <p>
         <label class="w3-label">Name of this batch</label>
-        <input class="w3-input" tabindex="1" accesskey="n" name="numcodes" type="number" maxlength="50" id="batchname" /> 
+        <input class="w3-input" tabindex="1" accesskey="n" name="batchname" type="text" maxlength="50" id="batchname" /> 
     </p>
     
     <p>
