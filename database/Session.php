@@ -1,10 +1,10 @@
 <?php
 
 require_once "Connector.php";
+require_once "Credentials.php";
 
 class Session {
     private $connection;
-    private $fingerprint = "";          // Add your key string here
     
     public function __construct() {
         $connector = new Connector();
@@ -16,7 +16,7 @@ class Session {
         
         if (!isset($_SESSION['userAgent']) || !isset($_SESSION['fingerprint'])) {
             $_SESSION['userAgent'] = sha1($_SERVER['HTTP_USER_AGENT']);
-            $_SESSION['fingerprint'] = sha1($this->fingerprint . session_id());
+            $_SESSION['fingerprint'] = sha1(Credentials::sessionFingerprint . session_id());
         }
     }
     
@@ -45,7 +45,7 @@ class Session {
         if ($_SESSION['userAgent'] != sha1($_SERVER['HTTP_USER_AGENT'])) {
             die("Invalid Session.");
         }
-        if ($_SESSION['fingerprint'] != sha1($this->fingerprint . session_id())) {
+        if ($_SESSION['fingerprint'] != sha1(Credentials::sessionFingerprint . session_id())) {
             die("Invalid Session.");
         }
     }
