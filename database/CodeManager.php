@@ -15,12 +15,12 @@ class CodeManager {
         $this->productManager = new ProductManager();
     }
     
-    public function generateCodes($numCodes) {
+    public function generateCodes($numCodes, $batchName) {
         $options = array(
             'options' => array(
             'default' => 0, // value to return if the filter fails
         ));
-
+        
         $session = new Session();
         $productId = $session->getSelectedProductId();
         
@@ -30,10 +30,13 @@ class CodeManager {
             die("Can't create more than 500 codes at a time");
         }
         
-        $codeIndex = $this->getHighestCodeIndex();
+        $batchId = $this->getNextBatchId();
+        $date = new DateTime();
+        $timeStamp = $date->getTimestamp();
+        $codeString = "";
         
-        $preparedQuery = $this->connection->prepare("INSERT INTO codes(code, issued, usecount, active, uselimit, codeindex, productid) VALUES (?,0,0,0,0,?,?);");
-        $preparedQuery->bind_param('sdd', $codeString, $codeIndex, $productId);
+        $preparedQuery = $this->connection->prepare("INSERT INTO codes(code, issued, usecount, active, uselimit, productid, batchname, batchid, timestamp) VALUES (?,0,0,0,0,?,?,?,?);");
+        $preparedQuery->bind_param('sdsdd', $codeString, $productId, $batchName, $batchId, $timeStamp);
         
         for ($i = 0; $i < $numCodes; $i++) {
             $codeIndex++;
@@ -42,24 +45,22 @@ class CodeManager {
         }
     }
     
-    private function getHighestCodeIndex() {
+    private function getNextBatchId() {
         $session = new Session();
-        $productId = $session->getSelectedProductId();
         
-        $preparedQuery = $this->connection->prepare("SELECT codeindex FROM codes WHERE productid = ?;");
-        $preparedQuery->bind_param('d', $productId);
-        $preparedQuery->bind_result($codeindex);
+        $preparedQuery = $this->connection->prepare("SELECT DISTINCT batchid FROM codes;");
+        $preparedQuery->bind_result($batchId);
         $preparedQuery->execute();
         
-        $highestCodeIndex = 0;
+        $highestBatchId = -1;
         
         while ($preparedQuery->fetch()) {
-            if ($codeIndex > $highestCodeIndex) {
-                $highestCodeIndex = $codeIndex;
+            if ($batchId > $highestBatchId) {
+                $highestBatchId = $batchId;
             }
         }
         
-        return $highestCodeIndex;
+        return $highestBatchId + 1;
     }
     
     public function isCodeValid($code) {
@@ -95,19 +96,14 @@ class CodeManager {
         return $result;
     }
     
-    public function printCodes($firstCode, $lastCode) {
+    public function printCodes($batchId) {
         $result = "";
-        
         $session = new Session();
-        $productId = $session->getSelectedProductId();
-        $this->productManager->fetchCurrentProduct();
-        
-        $firstCode = $this->connection->real_escape_string($firstCode);
-        $lastCode = $this->connection->real_escape_string($lastCode);
+        $batchId = $this->connection->real_escape_string($batchId);
         
         // Select set of codes between the 2 code indices - this will need to be updated if we get to a situation where codes can be deleted
-        $preparedQuery = $this->connection->prepare("SELECT code FROM codes WHERE codeindex >= ? AND codeindex <= ? && productid = ?;");
-        $preparedQuery->bind_param('ddd', $firstCode, $lastCode, $productId);
+        $preparedQuery = $this->connection->prepare("SELECT code FROM codes WHERE batchid = ?;");
+        $preparedQuery->bind_param('d', $batchId);
         $preparedQuery->bind_result($code);
         $preparedQuery->execute();
         
@@ -119,6 +115,25 @@ class CodeManager {
                 $result .= "<br /><br />";
                 $result .= "Go to " . $this->producManager->getRedeemLink() . " to redeem your code.<br /><br />";
             }
+        }
+        
+        return $result;
+    }
+    
+    public function fetchAllCodeBatches() {
+        $result = array();
+        
+        $preparedQuery = $this->connection->prepare("SELECT DISTINCT batchid, batchname FROM codes;");
+        
+        if (!$preparedQuery) {
+            die("Error fetching products");
+        }
+        
+        $preparedQuery->bind_result($batchId, $batchName);
+        $preparedQuery->execute();
+        
+        while ($preparedQuery->fetch()) {
+            array_push($result, array("batchid" => $batchId, "batchname" => $batchName));
         }
         
         return $result;

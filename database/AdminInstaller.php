@@ -21,11 +21,10 @@ class AdminInstaller {
         $rootPassword = password_hash($rootPassword, PASSWORD_DEFAULT);
         
         $this->connection->real_query("CREATE TABLE users (loginid INTEGER UNSIGNED NOT NULL AUTO_INCREMENT, email VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY (loginid));");
-        $this->connection->real_query("CREATE TABLE codes (codeid INTEGER UNSIGNED NOT NULL AUTO_INCREMENT, code VARCHAR(50) NOT NULL, issued INTEGER UNSIGNED NOT NULL, usecount INTEGER UNSIGNED NOT NULL, active INTEGER UNSIGNED NOT NULL, uselimit INTEGER UNSIGNED NOT NULL, productid INTEGER UNSIGNED NOT NULL, batchname VARCHAR(50) NOT NULL, batchid INTEGER UNSIGNED NOT NULL, PRIMARY KEY (codeid));");
+        $this->connection->real_query("CREATE TABLE codes (codeid INTEGER UNSIGNED NOT NULL AUTO_INCREMENT, code VARCHAR(50) NOT NULL, issued INTEGER UNSIGNED NOT NULL, usecount INTEGER UNSIGNED NOT NULL, active INTEGER UNSIGNED NOT NULL, uselimit INTEGER UNSIGNED NOT NULL, productid INTEGER UNSIGNED NOT NULL, batchname VARCHAR(50) NOT NULL, batchid INTEGER UNSIGNED NOT NULL, timestamp INTEGER UNSIGNED NOT NULL, PRIMARY KEY (codeid));");
         $this->connection->real_query("CREATE TABLE products (productid INTEGER UNSIGNED NOT NULL AUTO_INCREMENT, title VARCHAR(500) NOT NULL, description VARCHAR(1000) NOT NULL, orderlink VARCHAR(500), redeemlink VARCHAR(500), PRIMARY KEY (productid));");
         $this->connection->real_query("CREATE TABLE files (fileid INTEGER UNSIGNED NOT NULL AUTO_INCREMENT, productid INTEGER UNSIGNED NOT NULL, caption VARCHAR(1000), premium BOOLEAN NOT NULL, filename VARCHAR(300), PRIMARY KEY (fileid));");
-        $this->connection->real_query("CREATE TABLE codebatches (batchid INTEGER UNSIGNED NOT NULL AUTO_INCREMENT, productid INTEGER UNSIGNED NOT NULL, name VARCHAR(1000), firstcodeid INTEGER UNSIGNED NOT NULL, lastcodeid INTEGER UNSIGNED NOT NULL, PRIMARY KEY (batchid));");
-
+        
         $preparedQuery = $this->connection->prepare("INSERT INTO users(email, password) VALUES (?,?);");
         $preparedQuery->bind_param('ss', $rootEmail, $rootPassword);
         $result = $preparedQuery->execute();

@@ -8,8 +8,10 @@ if (isset($_GET["productid"])) {
 
 if (isset($_POST['cmdgenerate'])) {
     $codeManager = new CodeManager();
-    $codeManager->generateCodes(filter_input(INPUT_POST, 'numcodes', FILTER_SANITIZE_NUMBER_INT));
-    echo "Done";
+    $codeManager->generateCodes(filter_input(INPUT_POST, 'numcodes', FILTER_SANITIZE_NUMBER_INT), $_POST['batchname']);
+    ?>
+Codes generated successfully. <a href="printcodes.php">Click here</a> to view and print your code batches, or <a href="index.php">click here</a> to go back to all products.
+    <?php
 } else {
 ?>
 
