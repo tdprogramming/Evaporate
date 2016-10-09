@@ -97,8 +97,10 @@ class CodeManager {
     }
     
     public function printCodes($batchId) {
-        $result = "";
-        $session = new Session();
+        $fpdf = new FPDF();
+        $fpdf->AddPage();
+        $fpdf->SetFont('Arial','I',8);
+        $this->productManager->fetchCurrentProduct();
         $batchId = $this->connection->real_escape_string($batchId);
         
         // Select set of codes between the 2 code indices - this will need to be updated if we get to a situation where codes can be deleted
@@ -110,25 +112,27 @@ class CodeManager {
         if ($preparedQuery) {
             while ($preparedQuery->fetch())
             {
-                $result .= "----------------------------------------------<br /><br />";
-                $result .= "Your download code is: " . $code . "<br /><br />";
-                $result .= "<br /><br />";
-                $result .= "Go to " . $this->productManager->getRedeemLink() . " to redeem your code.<br /><br />";
+                $codeString = "Your download code is: " . $code . "\n";
+                $codeString .= "Go to " . $this->productManager->getRedeemLink() . " to redeem your code.";
+                $fpdf->MultiCell(80, 10, $codeString, 1, "C");
             }
         }
         
-        return $result;
+        $fpdf->Output("D");
     }
     
     public function fetchAllCodeBatches() {
+        $productId = $this->session->getSelectedProductId();
+        
         $result = array();
         
-        $preparedQuery = $this->connection->prepare("SELECT DISTINCT batchid, batchname FROM codes;");
+        $preparedQuery = $this->connection->prepare("SELECT DISTINCT batchid, batchname FROM codes WHERE productid = ?;");
         
         if (!$preparedQuery) {
-            die("Error fetching products");
+            die("Error fetching codes");
         }
         
+        $preparedQuery->bind_param('d', $productId);
         $preparedQuery->bind_result($batchId, $batchName);
         $preparedQuery->execute();
         

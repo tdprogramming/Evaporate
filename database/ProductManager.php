@@ -19,9 +19,9 @@ class ProductManager {
         $this->session = new Session();
     }
     
-    public function createProduct($newTitle, $newDescription, $newOrderLink) {
-        $preparedQuery = $this->connection->prepare("INSERT INTO products(title,description,orderlink) VALUES (?,?,?);");
-        $preparedQuery->bind_param('sss', $newTitle, $newDescription, $newOrderLink);
+    public function createProduct($newTitle, $newDescription, $newOrderLink, $newRedeemLink) {
+        $preparedQuery = $this->connection->prepare("INSERT INTO products(title,description,orderlink,redeemlink) VALUES (?,?,?);");
+        $preparedQuery->bind_param('ssss', $newTitle, $newDescription, $newOrderLink, $newRedeemLink);
         $preparedQuery->execute();
         $selectedProductId = $preparedQuery->insert_id;
         $this->session->setSelectedProductId($selectedProductId);

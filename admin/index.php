@@ -40,9 +40,7 @@ for ($i = 0; $i < $count; $i++) {
         <td>
             <?php echo "<a class=\"w3-btn\" href=\"editproduct.php?productid=" . $productsArray[$i]["productid"] ."\">Edit Details</a>"; ?>
             &nbsp;
-            <?php echo "<a class=\"w3-btn\" href=\"createcodes.php?productid=" . $productsArray[$i]["productid"] ."\">Create Codes</a>"; ?>
-            &nbsp;
-            <?php echo "<a class=\"w3-btn\" href=\"printcodes.php?productid=" . $productsArray[$i]["productid"] ."\">Print Codes</a>"; ?>
+            <?php echo "<a class=\"w3-btn\" href=\"managecodes.php?productid=" . $productsArray[$i]["productid"] ."\">Manage Codes</a>"; ?>
             &nbsp;
             <?php echo "<a class=\"w3-btn\" href=\"uploadproductimage.php?productid=" . $productsArray[$i]["productid"] ."\">Upload Image</a>"; ?>
             &nbsp;

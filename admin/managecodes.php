@@ -6,15 +6,46 @@ if (isset($_GET["productid"])) {
     $session->setSelectedProductId($_GET["productid"]);
 }
 
+$codeManager = new CodeManager();
+
 if (isset($_POST['cmdgenerate'])) {
-    $codeManager = new CodeManager();
     $codeManager->generateCodes(filter_input(INPUT_POST, 'numcodes', FILTER_SANITIZE_NUMBER_INT), $_POST['batchname']);
+}
+
+$codeBatchesArray = $codeManager->fetchAllCodeBatches();
+$count = count($codeBatchesArray);
+
+if ($count == 0) {
     ?>
-Codes generated successfully. <a href="printcodes.php">Click here</a> to view and print your code batches, or <a href="index.php">click here</a> to go back to all products.
+    <p>You have no codes set up yet.</p>
     <?php
 } else {
 ?>
 
+<table class="w3-table w3-striped">
+  <tr>
+    <th>Batch ID</th>
+    <th>Batch Name</th> 
+    <th>Print</th>
+  </tr>
+<?php
+for ($i = 0; $i < $count; $i++) {
+    ?><tr>
+        <td>
+            <?php echo $codeBatchesArray[$i]["batchid"]; ?>
+        </td>
+        <td>
+            <?php echo $codeBatchesArray[$i]["batchname"]; ?>
+        </td>
+        <td>
+            <?php echo "<a target=\"_blank\" class=\"w3-btn\" href=\"createcodespdf.php?batchid=" . $codeBatchesArray[$i]["batchid"] ."\">Get PDF Of Codes</a>"; ?>
+        </td>
+    </tr>
+<?php    
+}}
+?>
+</table>
+    
 <form class="w3-form" name="product-form" id="product-form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
     <h2>Create Code Batch</h2>
   
@@ -35,9 +66,3 @@ Codes generated successfully. <a href="printcodes.php">Click here</a> to view an
 </form>
 </body>
 </html>
-
-
-<?php
-}
-
-?>
