@@ -18,7 +18,7 @@
         if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
             echo "File is valid, and was successfully uploaded.\n";
         } else {
-            echo "Possible file upload attack!\n";
+            echo "Possible file upload attack! Error code: " . $_FILES['userfile']['error'];
         }
     }
     require_once 'adminheader.php';
@@ -44,3 +44,5 @@
     </dl> 
   </fieldset> 
 </form>
+
+<p>Please note that Evaporate does not currently support an upload progress bar. One will be added soon! For large files, please wait patiently for the upload to complete.</p>

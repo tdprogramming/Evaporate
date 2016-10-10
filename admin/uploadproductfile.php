@@ -28,11 +28,12 @@
         
         $finalName = basename($_FILES['file']['name']);
         $uploadfile = $uploaddir . $finalName;
-
+        
+        // Note - need appropriate file size limits here
         if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
             echo "File is valid, and was successfully uploaded.\n";
         } else {
-            echo "Possible file upload attack!\n";
+            echo "Possible file upload attack! Error code: " . $_FILES['file']['error'];
         }
         
         $caption = $_POST["caption"];
