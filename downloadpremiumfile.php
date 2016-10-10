@@ -11,7 +11,7 @@ if (!$codeManager->isCodeValid($session->getSelectedProductCode())) {
     die("Invalid code");
 }
 
-$fileName = $_GET["filename"];
+$fileName = filter_input(INPUT_GET, "filename", FILTER_SANITIZE_URL);
 
 $file = "downloads/premium/product" . $session->getSelectedProductId() . "/" . $fileName;
 $fp = fopen($file, 'rb');

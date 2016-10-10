@@ -49,7 +49,10 @@ if ($installSuccess) {
         <p>
             <?php echo ($installError ? $installError : "Please enter an admin email address and password."); ?>
         </p>
-        <form class="w3-form" name="register-form" id="register-form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>"> 
+        <form class="w3-form" name="register-form" id="register-form" method="post" action="<?php 
+            $selfURL = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);
+            echo $selfURL;
+            ?>"> 
             <p>
                 <label class="w3-label">Email Address</label>
                 <input class="w3-input" tabindex="1" accesskey="e" name="email" type="text" maxlength="50" id="email" /> 

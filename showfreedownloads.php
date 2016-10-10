@@ -5,9 +5,10 @@ require_once 'database/Session.php';
 
 $session = new Session();
 $fileManager = new FileManager();
+$productId = filter_input(INPUT_GET, "productid", FILTER_SANITIZE_NUMBER_INT);
 
-if (isset($_GET["productid"])) {
-    $session->setSelectedProductId($_GET["productid"]);
+if ($productId != NULL) {
+    $session->setSelectedProductId($productId);
 } else {
     die ("Error - no selected product");
 }

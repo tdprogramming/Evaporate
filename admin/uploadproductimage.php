@@ -3,12 +3,16 @@
     require_once "../database/Session.php";
 
     $session = new Session();
-        
-    if (isset($_GET["productid"])) {
-        $session->setSelectedProductId($_GET["productid"]);
+    
+    $productId = filter_input(INPUT_GET, "productid", FILTER_SANITIZE_NUMBER_INT);
+    
+    if ($productId != NULL) {
+        $session->setSelectedProductId($productId);
     }
     
-    if (isset($_POST['submit'])) {
+    $submit = filter_input(INPUT_POST, "submit", FILTER_SANITIZE_NUMBER_INT);
+    
+    if ($submit != NULL) {
         // TODO: validate upload file name
 
         $selectedProductId = $session->getSelectedProductId();
@@ -25,7 +29,10 @@
     
 ?>
 
-<form name="upload-form" id="upload-form" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>"> 
+<form name="upload-form" id="upload-form" method="post" enctype="multipart/form-data" action="<?php 
+    $selfURL = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);
+    echo $selfURL;
+    ?>"> 
   <fieldset> 
     <legend>Select image to add to this product (must be PNG)</legend> 
     <dl> 

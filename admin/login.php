@@ -11,7 +11,9 @@ if ($session->isLoggedIn()) {
     $loggedIn = TRUE;
 }
 else {
-    if (isset($_POST['cmdlogin'])) {
+    $cmdLogin = filter_input(INPUT_POST, "cmdlogin", FILTER_SANITIZE_NUMBER_INT);
+    
+    if ($cmdLogin != NULL) {
         $session->login(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_URL));
         
         if ($session->isLoggedIn()) {
@@ -53,7 +55,10 @@ if ($loggedIn == TRUE) {
             }
         ?>
         
-        <form class="w3-form" name="login-form" id="login-form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>"> 
+        <form class="w3-form" name="login-form" id="login-form" method="post" action="<?php 
+            $selfURL = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);
+            echo $selfURL;
+            ?>"> 
             <p>
                 <label class="w3-label">Email Address</label>
                 <input class="w3-input" tabindex="1" accesskey="e" name="email" type="text" maxlength="50" id="email" /> 

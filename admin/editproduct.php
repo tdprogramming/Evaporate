@@ -8,17 +8,26 @@ $productManager = new ProductManager();
 
 require_once 'adminheader.php';
 
-if (isset($_GET["productid"])) {
-    $session->setSelectedProductId($_GET["productid"]);
+$productId = filter_input(INPUT_GET, "productid", FILTER_SANITIZE_NUMBER_INT);
+
+if (isset($productId)) {
+    $session->setSelectedProductId($productId);
 } else {
     $session->setSelectedProductId(-1);
 }
 
-if (isset($_POST['submit'])) {
+$submit = filter_input(INPUT_POST, "submit", FILTER_SANITIZE_NUMBER_INT);
+
+if ($submit != NULL) {
+    $title = filter_input(INPUT_POST, "title", FILTER_SANITIZE_STRING);
+    $description = filter_input(INPUT_POST, "description", FILTER_SANITIZE_STRING);
+    $orderLink = filter_input(INPUT_POST, "orderlink", FILTER_SANITIZE_URL);
+    $redeemLink = filter_input(INPUT_POST, "redeemlink", FILTER_SANITIZE_URL);
+    
     if ($session->getSelectedProductId() == -1) {
-        $productManager->createProduct($_POST['title'], $_POST['description'], $_POST['orderlink'], $_POST['redeemlink']);
+        $productManager->createProduct($title, $description, $orderLink, $redeemLink);
     } else {
-        $productManager->updateCurrentProduct($_POST['title'], $_POST['description'], $_POST['orderlink'], $_POST['redeemlink']);
+        $productManager->updateCurrentProduct($title, $description, $orderLink, $redeemLink);
     }
     
     header("Location: index.php");
@@ -26,7 +35,10 @@ if (isset($_POST['submit'])) {
     $productManager->fetchCurrentProduct();
 ?>
 
-<form class="w3-form" name="product-form" id="product-form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<form class="w3-form" name="product-form" id="product-form" method="post" action="<?php 
+    $selfURL = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);
+    echo $selfURL;
+    ?>">
     <h2>Product Details</h2>
   
     <p>

@@ -7,15 +7,17 @@ require_once 'database/Session.php';
 $session = new Session();
 $fileManager = new FileManager();
 $codeManager = new CodeManager();
+$productId = filter_input(INPUT_GET, "productid", FILTER_SANITIZE_NUMBER_INT);
 
-if (isset($_GET["productid"])) {
-    $session->setSelectedProductId($_GET["productid"]);
+if ($productId != NULL) {
+    $session->setSelectedProductId($productId);
 }
 
 $validRedeem = FALSE;
 $codeError = null;
+$cmdRedeem = filter_input(INPUT_POST, "cmdredeem", FILTER_SANITIZE_NUMBER_INT);
 
-if (isset($_POST['cmdredeem'])) {
+if ($cmdRedeem != NULL) {
     $codeManager = new CodeManager();
     $selectedProductCode = filter_input(INPUT_POST, 'code', FILTER_SANITIZE_STRING);
     
@@ -80,7 +82,10 @@ if (isset($_POST['cmdredeem'])) {
         <?php 
         } else {
             ?>
-            <form class="w3-form" name="redeem-form" id="redeem-form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+            <form class="w3-form" name="redeem-form" id="redeem-form" method="post" action="<?php 
+                $selfURL = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);
+                echo $selfURL;
+                ?>">
                 <p>
                     <label class="w3-label">Code</label>
                     <input class="w3-input" tabindex="1" accesskey="c" name="code" type="text" maxlength="50" id="title" placeholder="Code">

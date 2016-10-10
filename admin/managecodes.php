@@ -2,13 +2,17 @@
 
 require_once 'adminheader.php';
 
-if (isset($_GET["productid"])) {
-    $session->setSelectedProductId($_GET["productid"]);
+$productId = filter_input(INPUT_GET, "productid", FILTER_SANITIZE_NUMBER_INT);
+
+if ($productId != NULL) {
+    $session->setSelectedProductId($productId);
 }
 
 $codeManager = new CodeManager();
 
-if (isset($_POST['cmdgenerate'])) {
+$cmdGenerate = filter_input(INPUT_POST, "cmdgenerate", FILTER_SANITIZE_NUMBER_INT);
+
+if ($cmdGenerate) {
     $codeManager->generateCodes(filter_input(INPUT_POST, 'numcodes', FILTER_SANITIZE_NUMBER_INT), $_POST['batchname']);
 }
 
@@ -46,7 +50,10 @@ for ($i = 0; $i < $count; $i++) {
 ?>
 </table>
     
-<form class="w3-form" name="product-form" id="product-form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<form class="w3-form" name="product-form" id="product-form" method="post" action="<?php 
+    $selfURL = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);
+    echo $selfURL;
+    ?>">
     <h2>Create Code Batch</h2>
   
     <p>

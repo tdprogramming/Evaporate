@@ -19,7 +19,9 @@ if (!$session->isLoggedIn()) {
     die("Redirecting you to the login page...");
 }
 
-if (isset($_GET["batchid"])) {
+$batchId = filter_input(INPUT_GET, "batchid", FILTER_SANITIZE_NUMBER_INT);
+
+if ($batchId != NULL) {
     $codeManager = new CodeManager();
-    $codeManager->printCodes($_GET["batchid"]);    
+    $codeManager->printCodes($batchId);    
 }

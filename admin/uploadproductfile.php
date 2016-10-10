@@ -3,12 +3,16 @@
     require_once "../database/Session.php";
 
     $session = new Session();
+    
+    $productId = filter_input(INPUT_GET, "productid", FILTER_SANITIZE_NUMBER_INT);
         
-    if (isset($_GET["productid"])) {
-        $session->setSelectedProductId($_GET["productid"]);
+    if ($productId != NULL) {
+        $session->setSelectedProductId($productId);
     }
     
-    if (isset($_POST['submit'])) {
+    $submit = filter_input(INPUT_POST, "submit", FILTER_SANITIZE_NUMBER_INT);
+    
+    if ($submit != NULL) {
         // TODO: validate upload file name
 
         $productManager = new ProductManager();
@@ -16,7 +20,9 @@
         $selectedProductId = $session->getSelectedProductId();
         $premiumFile = FALSE;
         
-        if (isset($_POST['premium']) && $_POST['premium'] == 'Yes')
+        $premium = filter_input(INPUT_POST, "premium", FILTER_SANITIZE_STRING);
+        
+        if ($premium == 'Yes')
         {
             $uploaddir = '../downloads/premium/product' . $selectedProductId . "/";
             $premiumFile = TRUE;
@@ -36,7 +42,8 @@
             echo "Possible file upload attack! Error code: " . $_FILES['file']['error'];
         }
         
-        $caption = $_POST["caption"];
+        $caption = filter_input(INPUT_POST, "caption", FILTER_SANITIZE_NUMBER_INT);
+
         // Insert the file name into the files database
         $productManager->insertFile($finalName, $caption, $premiumFile);
     }
@@ -44,7 +51,10 @@
     require_once 'adminheader.php';
 ?>
 
-<form name="upload-form" id="upload-form" enctype="multipart/form-data" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>"> 
+<form name="upload-form" id="upload-form" enctype="multipart/form-data" method="post" action="<?php 
+    $selfURL = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);
+    echo $selfURL;
+    ?>"> 
   <fieldset> 
     <legend>Select file to add to this product:</legend>
     <dl> 
@@ -77,3 +87,5 @@
     </dl> 
   </fieldset> 
 </form>
+
+<p>Please note that Evaporate does not currently support an upload progress bar. One will be added soon! For large files, please wait patiently for the upload to complete.</p>
