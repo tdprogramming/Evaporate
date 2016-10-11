@@ -10,9 +10,7 @@
         $session->setSelectedProductId($productId);
     }
     
-    $submit = filter_input(INPUT_POST, "submit", FILTER_SANITIZE_NUMBER_INT);
-    
-    if ($submit != NULL) {
+    if (isset($_POST["submit"])) {
         // TODO: validate upload file name
 
         $productManager = new ProductManager();

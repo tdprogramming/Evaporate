@@ -1,10 +1,12 @@
 <?php
 
+require_once '../database/FileManager.php';
 require_once '../database/ProductManager.php';
 require_once '../database/Session.php';
 
 $session = new Session();
 $productManager = new ProductManager();
+$fileManager = new FileManager();
 
 require_once 'adminheader.php';
 
@@ -14,6 +16,19 @@ if (isset($productId)) {
     $session->setSelectedProductId($productId);
 } else {
     $session->setSelectedProductId(-1);
+}
+
+if (isset($_GET["command"])) {
+    $command = filter_input(INPUT_GET, "command", FILTER_SANITIZE_STRING);
+    
+    switch ($command) {
+        case "delete":
+            $fileIdToDelete = filter_input(INPUT_GET, "fileid", FILTER_SANITIZE_NUMBER_INT);
+            $fileManager->deleteFile($fileIdToDelete);
+            break;
+        default:
+            break;
+    }
 }
 
 $submit = filter_input(INPUT_POST, "submit", FILTER_SANITIZE_NUMBER_INT);
@@ -65,6 +80,54 @@ if ($submit != NULL) {
         <input class="w3-btn" tabindex="5" accesskey="s" type="submit" name="submit" value="Save" />&nbsp;<a class="w3-btn" href="index.php">Cancel</a>
     </p>
 </form>
+
+<?php
+    $filesArray = $fileManager->getFiles(FALSE);
+    $count = count($filesArray);
+?>
+
+<div class="w3-container">
+    <h2>Free Files</h2>
+</div>
+
+<div class="w3-container">
+    <ul class="w3-ul w3-card-4">
+        <?php
+        for ($i = 0; $i < $count; $i++) {
+        ?>
+        <li class="w3-padding-16">
+            <span class="w3-xlarge"><?php echo $filesArray[$i]["caption"] ?></span><br />
+            <span><a class="w3-btn" href="<?php echo "editproduct.php?command=delete&fileid=" . $filesArray[$i]["fileid"] ?>">Delete</a></span>
+        </li>
+        <?php
+        }
+        ?>
+    </ul>
+</div>
+
+<?php
+    $filesArray = $fileManager->getFiles(TRUE);
+    $count = count($filesArray);
+?>
+
+<div class="w3-container">
+    <h2>Premium Files</h2>
+</div>
+
+<div class="w3-container">
+    <ul class="w3-ul w3-card-4">
+        <?php
+        for ($i = 0; $i < $count; $i++) {
+        ?>
+        <li class="w3-padding-16">
+            <span class="w3-xlarge"><?php echo $filesArray[$i]["caption"] ?></span><br />
+            <span><a class="w3-btn" href="<?php echo "editproduct.php?command=delete&fileid=" . $filesArray[$i]["fileid"] ?>">Delete</a></span>
+        </li>
+        <?php
+        }
+        ?>
+    </ul>
+</div>
 </body>
 </html>
 <?php }

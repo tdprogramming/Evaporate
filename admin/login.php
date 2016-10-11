@@ -11,9 +11,7 @@ if ($session->isLoggedIn()) {
     $loggedIn = TRUE;
 }
 else {
-    $cmdLogin = filter_input(INPUT_POST, "cmdlogin", FILTER_SANITIZE_NUMBER_INT);
-    
-    if ($cmdLogin != NULL) {
+    if (isset($_POST["cmdlogin"])) {
         $session->login(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_URL));
         
         if ($session->isLoggedIn()) {
