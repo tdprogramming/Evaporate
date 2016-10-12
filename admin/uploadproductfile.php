@@ -10,7 +10,7 @@
         $session->setSelectedProductId($productId);
     }
     
-    if (isset($_POST["submit"])) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_FILES["file"])) {
         // TODO: validate upload file name
 
         $productManager = new ProductManager();
@@ -49,7 +49,15 @@
     require_once 'adminheader.php';
 ?>
 
-<form name="upload-form" id="upload-form" enctype="multipart/form-data" method="post" action="<?php 
+<link rel="stylesheet" type="text/css" href="../css/progressbar.css">
+
+<div id="bar_blank">
+   <div id="bar_color"></div>
+</div>
+<div id="status"></div>
+
+<form name="upload-form" id="upload-form" enctype="multipart/form-data" method="post" target="hidden_iframe"
+    action="<?php 
     $selfURL = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);
     echo $selfURL;
     ?>"> 
@@ -84,6 +92,9 @@
       </dt> 
     </dl> 
   </fieldset> 
+    <input type="hidden" value="upload-form"
+    name="<?php echo ini_get("session.upload_progress.name"); ?>">
 </form>
 
-<p>Please note that Evaporate does not currently support an upload progress bar. One will be added soon! For large files, please wait patiently for the upload to complete.</p>
+<iframe id="hidden_iframe" name="hidden_iframe" src="about:blank"></iframe>
+<script type="text/javascript" src="../js/upload.js"></script>
