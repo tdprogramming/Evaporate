@@ -33,11 +33,7 @@ class FileManager {
         
         $preparedQuery->fetch();
         
-        if ($premium == 0) {
-            unlink("../downloads/free/product" . $productId . "/" . $fileName);
-        } else {
-            unlink("../downloads/premium/product" . $productId . "/" . $fileName);
-        }
+        unlink("../downloads/product" . $productId . "/" . $fileName);
         
         $preparedQuery->close();
             
@@ -46,20 +42,33 @@ class FileManager {
         $deleteQuery->execute();
     }
     
-    public function getFiles($premium, $productId = -1) {
+    public function isFileFree($fileName, $productId = -1) {
+        if ($productId == -1) {
+            $productId = $this->session->getSelectedProductId();
+        }
+        
+        $preparedQuery = $this->connection->prepare("SELECT premium FROM files WHERE productid=? AND filename=?;");
+        $preparedQuery->bind_param('ds', $productId, $fileName);
+        $preparedQuery->bind_result($premium);
+        $preparedQuery->execute();
+        $preparedQuery->fetch();
+        return $premium;
+    }
+    
+    public function getFiles($productId = -1) {
         if ($productId == -1) {
             $productId = $this->session->getSelectedProductId();
         }
         
         $result = array();
         
-        $preparedQuery = $this->connection->prepare("SELECT fileid,caption,filename FROM files WHERE productid=? AND premium=?;");
-        $preparedQuery->bind_param('di', $productId, $premium);
-        $preparedQuery->bind_result($fileId, $caption, $filename);
+        $preparedQuery = $this->connection->prepare("SELECT fileid,caption,filename,premium FROM files WHERE productid=?;");
+        $preparedQuery->bind_param('d', $productId);
+        $preparedQuery->bind_result($fileId, $caption, $filename, $premium);
         $preparedQuery->execute();
         
         while ($preparedQuery->fetch()) {
-            array_push($result, array("fileid" => $fileId, "caption" => $caption, "filename" => $filename));
+            array_push($result, array("fileid" => $fileId, "caption" => $caption, "filename" => $filename, "premium" => $premium));
         }
         
         return $result;

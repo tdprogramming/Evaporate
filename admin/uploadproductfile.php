@@ -20,15 +20,7 @@
         
         $premium = filter_input(INPUT_POST, "premium", FILTER_SANITIZE_STRING);
         
-        if ($premium == 'Yes')
-        {
-            $uploaddir = '../downloads/premium/product' . $selectedProductId . "/";
-            $premiumFile = TRUE;
-        }
-        else
-        {
-            $uploaddir = '../downloads/free/product' . $selectedProductId . "/";
-        }
+        $uploaddir = '../downloads/product' . $selectedProductId . "/";
         
         $finalName = basename($_FILES['file']['name']);
         $uploadfile = $uploaddir . $finalName;
@@ -40,10 +32,10 @@
             echo "Possible file upload attack! Error code: " . $_FILES['file']['error'];
         }
         
-        $caption = filter_input(INPUT_POST, "caption", FILTER_SANITIZE_NUMBER_INT);
+        $caption = filter_input(INPUT_POST, "caption", FILTER_SANITIZE_STRING);
 
         // Insert the file name into the files database
-        $productManager->insertFile($finalName, $caption, $premiumFile);
+        $productManager->insertFile($finalName, $caption, TRUE);
     }
     
     require_once 'adminheader.php';
@@ -79,13 +71,6 @@
     </dl> 
     <dl> 
       <dt> 
-        <label title="Premium File">Premium File:
-            <input tabindex="3" accesskey="p" name="premium" type="checkbox" id="premium" value="Yes" /> 
-        </label> 
-      </dt> 
-    </dl> 
-    <dl> 
-      <dt> 
         <label title="Submit"> 
             <input tabindex="4" accesskey="s" type="submit" name="submit" value="Upload" /> 
         </label> 
@@ -98,3 +83,14 @@
 
 <iframe id="hidden_iframe" name="hidden_iframe" src="about:blank"></iframe>
 <script type="text/javascript" src="../js/upload.js"></script>
+
+<!-- Upload Progress Modal -->
+<div id="upload-progress-modal" class="w3-modal">
+  <div class="w3-modal-content">
+    <div class="w3-container">
+        <div id="upload-progress-bar" class="w3-progressbar w3-green" style="width:0%">
+            <div class="w3-center w3-text-white">0%</div>
+        </div>
+    </div>
+  </div>
+</div>

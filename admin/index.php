@@ -57,6 +57,6 @@ for ($i = 0; $i < $count; $i++) {
 
 <div class="w3-container">
     <p>
-        <a class="w3-btn" href="editproduct.php">Add Product</a>
+        <a class="w3-btn" href="editproduct.php?productid=-1">Add Product</a>
     </p>
 </div>

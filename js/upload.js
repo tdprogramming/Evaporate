@@ -1,5 +1,5 @@
 function toggleBarVisibility() {
-    var e = document.getElementById("bar_blank");
+    var e = document.getElementById("upload-progress-modal");
     e.style.display = (e.style.display == "block") ? "none" : "block";
 }
 
@@ -25,8 +25,8 @@ function handleResponse(http) {
     var response;
     if (http.readyState == 4) {
         response = http.responseText;
-        document.getElementById("bar_color").style.width = response + "%";
-        document.getElementById("status").innerHTML = response + "%";
+        document.getElementById("upload-progress-bar").style.width = response + "%";
+        document.getElementById("upload-progress-bar").innerHTML = response + "%";
 
         if (response < 100) {
             setTimeout("sendRequest()", 1000);

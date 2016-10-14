@@ -39,7 +39,7 @@ $count = count($filesArray);
             ?>
             <li class="w3-padding-16">
                 <span class="w3-xlarge"><?php echo $filesArray[$i]["caption"] ?></span><br />
-                <span><a class="w3-btn" href="<?php echo "downloads/free/product" . $session->getSelectedProductId() . "/" . $filesArray[$i]["filename"] ?>">Download</a>
+                <span><a class="w3-btn" href="downloadpremiumfile.php?filename=<?php echo $filesArray[$i]["filename"] ?>">Download</a>
             </li>
             <?php
             }

@@ -20,19 +20,15 @@ class ProductManager {
     }
     
     public function createProduct($newTitle, $newDescription, $newOrderLink, $newRedeemLink) {
-        $preparedQuery = $this->connection->prepare("INSERT INTO products(title,description,orderlink,redeemlink) VALUES (?,?,?);");
+        $preparedQuery = $this->connection->prepare("INSERT INTO products(title,description,orderlink,redeemlink) VALUES (?,?,?,?);");
         $preparedQuery->bind_param('ssss', $newTitle, $newDescription, $newOrderLink, $newRedeemLink);
         $preparedQuery->execute();
         $selectedProductId = $preparedQuery->insert_id;
         $this->session->setSelectedProductId($selectedProductId);
         
         // Create folders for product files - TODO: Get advice on most secure mode setting to use
-        if (!is_dir("../downloads/premium/product" . $selectedProductId)) {
-            mkdir("../downloads/premium/product" . $selectedProductId, 0777);
-        }
-                
-        if (!is_dir("../downloads/free/product" . $selectedProductId)) {
-            mkdir("../downloads/free/product" . $selectedProductId, 0777);
+        if (!is_dir("../downloads/product" . $selectedProductId)) {
+            mkdir("../downloads/product" . $selectedProductId, 0777);
         }
         
         if (!is_dir("../images/product" . $selectedProductId)) {
