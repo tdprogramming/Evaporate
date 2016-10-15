@@ -53,10 +53,10 @@ class ProductManager {
         $preparedQuery->fetch();
     }
     
-    public function updateCurrentProduct($newTitle, $newDescription, $newOrderLink) {
+    public function updateCurrentProduct($newTitle, $newDescription, $newOrderLink, $newRedeemLink) {
         $selectedProductId = $this->session->getSelectedProductId();
-        $preparedQuery = $this->connection->prepare("UPDATE products SET title=?,description=?,orderlink=? WHERE productid=?;");
-        $preparedQuery->bind_param('sssd', $newTitle, $newDescription, $newOrderLink, $selectedProductId);
+        $preparedQuery = $this->connection->prepare("UPDATE products SET title=?,description=?,orderlink=?,redeemlink=? WHERE productid=?;");
+        $preparedQuery->bind_param('ssssd', $newTitle, $newDescription, $newOrderLink, $newRedeemLink, $selectedProductId);
         $preparedQuery->execute();
         $this->fetchCurrentProduct();
     }

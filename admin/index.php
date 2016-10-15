@@ -12,6 +12,11 @@ if (!$session->isLoggedIn()) {
 }
 
 $productManager = new ProductManager();
+
+if (isset($_GET["createproduct"])) {
+    $productManager->createProduct("Untitled Product", "Untitled Product", "", "");
+}
+
 $productsArray = $productManager->fetchAllProducts();
 $count = count($productsArray);
 
@@ -23,29 +28,13 @@ if ($count == 0) {
 ?>
 
 <table class="w3-table w3-striped">
-  <tr>
-    <th>Product ID</th>
-    <th>Product Name</th> 
-    <th>Actions</th>
-  </tr>
 <?php
 for ($i = 0; $i < $count; $i++) {
-    ?><tr>
-        <td>
-            <?php echo $productsArray[$i]["productid"]; ?>
-        </td>
+    ?><tr onclick="window.document.location='<?php echo "editproduct.php?productid=" . $productsArray[$i]["productid"]; ?>';">
         <td>
             <?php echo $productsArray[$i]["title"]; ?>
         </td>
         <td>
-            <?php echo "<a class=\"w3-btn\" href=\"editproduct.php?productid=" . $productsArray[$i]["productid"] ."\">Edit Details</a>"; ?>
-            &nbsp;
-            <?php echo "<a class=\"w3-btn\" href=\"managecodes.php?productid=" . $productsArray[$i]["productid"] ."\">Manage Codes</a>"; ?>
-            &nbsp;
-            <?php echo "<a class=\"w3-btn\" href=\"uploadproductimage.php?productid=" . $productsArray[$i]["productid"] ."\">Upload Image</a>"; ?>
-            &nbsp;
-            <?php echo "<a class=\"w3-btn\" href=\"uploadproductfile.php?productid=" . $productsArray[$i]["productid"] ."\">Upload File</a>"; ?>
-            &nbsp;
             <?php echo "<a class=\"w3-btn\" href=\"deleteproduct.php?productid=" . $productsArray[$i]["productid"] ."\">Delete Product</a>"; ?>
         </td>
     </tr>
@@ -57,6 +46,6 @@ for ($i = 0; $i < $count; $i++) {
 
 <div class="w3-container">
     <p>
-        <a class="w3-btn" href="editproduct.php?productid=-1">Add Product</a>
+        <a class="w3-btn" href="index.php?createproduct=1">Add Product</a>
     </p>
 </div>

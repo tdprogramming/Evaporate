@@ -55,6 +55,12 @@ class FileManager {
         return $premium;
     }
     
+    public function changePremiumStatus($fileId, $newStatus) {
+        $preparedQuery = $this->connection->prepare("UPDATE files SET premium=? WHERE fileid=?;");
+        $preparedQuery->bind_param('dd', $newStatus, $fileId);
+        $preparedQuery->execute();
+    }
+    
     public function getFiles($productId = -1) {
         if ($productId == -1) {
             $productId = $this->session->getSelectedProductId();

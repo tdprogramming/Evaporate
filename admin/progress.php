@@ -1,5 +1,12 @@
 <?php
-session_start();
+require_once '../database/Session.php';
+
+$session = new Session();
+
+if (!$session->isLoggedIn())
+{
+    die ("Not logged in.");
+}
 
 $key = ini_get("session.upload_progress.prefix") . "upload-form";
 if (!empty($_SESSION[$key])) {
