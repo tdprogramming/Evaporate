@@ -16,7 +16,13 @@ class CodeManager {
         $this->productManager = new ProductManager();
     }
     
-    public function generateCodes($numCodes, $batchName) {
+    public function updateBatchName($batchId, $batchName) {
+        $preparedQuery = $this->connection->prepare("UPDATE codes SET batchname=? WHERE batchid=?;");
+        $preparedQuery->bind_param('sd', $batchName, $batchId);
+        $preparedQuery->execute();
+    }
+    
+    public function generateCodes($numCodes) {
         $options = array(
             'options' => array(
             'default' => 0, // value to return if the filter fails
@@ -32,6 +38,7 @@ class CodeManager {
         }
         
         $batchId = $this->getNextBatchId();
+        $batchName = "Batch " . $batchId;
         $date = new DateTime();
         $timeStamp = $date->getTimestamp();
         $codeString = "";

@@ -1,5 +1,7 @@
 var pendingChanges = false;
 var saving = false;
+var fileCaptionData;
+var batchCaptionData;
 
 function fileSelected() {
     var file = document.getElementById('fileToUpload').files[0];
@@ -34,7 +36,6 @@ function showFileDetails(file, nameElement, sizeElement, typeElement) {
 function uploadFile() {
     var fd = new FormData();
     fd.append('fileToUpload', document.getElementById('fileToUpload').files[0]);
-    fd.append('caption', document.getElementById('caption').value);
     startUpload(fd);
 }
 
@@ -107,6 +108,20 @@ function savePendingChanges() {
     fd.append('orderlink', orderLink);
     fd.append('redeemlink', redeemLink);
     
+    fd.append('numfilecaptions', fileCaptionData.length);
+    
+    for (var i = 0; i < fileCaptionData.length; i++) {
+        fd.append('fileid' + i.toString(), fileCaptionData[i].fileId);
+        fd.append('filecaption' + i.toString(), document.getElementById(fileCaptionData[i].inputId).value);
+    }
+
+    fd.append('numbatchcaptions', batchCaptionData.length);
+    
+    for (var i = 0; i < batchCaptionData.length; i++) {
+        fd.append('batchid' + i.toString(), batchCaptionData[i].batchId);
+        fd.append('batchcaption' + i.toString(), document.getElementById(batchCaptionData[i].inputId).value);
+    }
+    
     var xhr = new XMLHttpRequest();
     xhr.upload.addEventListener("progress", uploadProgress, false);
     xhr.addEventListener("load", onSaveComplete, false);
@@ -123,4 +138,9 @@ function onSaveComplete() {
     } else {
         document.getElementById('pendingChangesLabel').innerHTML = "All Changes Saved";
     }
+}
+
+function setupCaptionInputs(fileInputs, batchInputs) {
+    fileCaptionData = fileInputs;
+    batchCaptionData = batchInputs;
 }

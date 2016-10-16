@@ -15,9 +15,8 @@ if ($productId != NULL) {
 
 $validRedeem = FALSE;
 $codeError = null;
-$cmdRedeem = filter_input(INPUT_POST, "cmdredeem", FILTER_SANITIZE_NUMBER_INT);
 
-if ($cmdRedeem != NULL) {
+if (isset($_POST["cmdredeem"])) {
     $codeManager = new CodeManager();
     $selectedProductCode = filter_input(INPUT_POST, 'code', FILTER_SANITIZE_STRING);
     
@@ -64,7 +63,7 @@ if ($cmdRedeem != NULL) {
         <?php
         if ($validRedeem) {
             $productId = $session->getSelectedProductId();
-            $filesArray = $fileManager->getFiles(TRUE);
+            $filesArray = $fileManager->getFilesWithCost($productId, TRUE);
             $count = count($filesArray);
         ?>
         <ul class="w3-ul w3-card-4">

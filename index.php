@@ -45,20 +45,20 @@ if ($count == 0) {
                         $imagePath = "images/productdefault.png";
                     }
                     ?>
-                    <img src="<?php echo $imagePath; ?>" class="w3-left" style="width:50px;height:50px">
+                    <img src="<?php echo $imagePath; ?>" class="w3-left" style="width:50px;height:50px;margin:10px">
                     <span class="w3-xlarge"><?php echo $productsArray[$i]["title"] ?></span><br />
-                    <span><?php echo $productsArray[$i]["description"] ?></span><br />
+                    <span class="w3-medium"><?php echo $productsArray[$i]["description"] ?></span><br /><br />
                     <span>
                         <?php 
                         if ($hasFreeDownloads) {
                             ?>
-                            <a class="w3-btn" href=<?php echo "\"showfreedownloads.php?productid=" . $productId . "\"" ?>>Free Downloads</a>&nbsp;
+                            <a class="w3-btn" style="width:180px" href=<?php echo "\"showfreedownloads.php?productid=" . $productId . "\"" ?>>Free Downloads</a>&nbsp;
                             <?php
                         }
                         
                         if ($hasPremiumDownloads) {
                             ?>
-                            <a class="w3-btn" href=<?php echo "\"redeemcode.php?productid=" . $productId . "\"" ?>>Redeem Code</a>
+                            <a class="w3-btn" style="width:180px" href=<?php echo "\"redeemcode.php?productid=" . $productId . "\"" ?>>Redeem Code</a>
                             <?php
                         }
                         ?>

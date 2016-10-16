@@ -13,7 +13,7 @@ if ($productId != NULL) {
     die ("Error - no selected product");
 }
 
-$filesArray = $fileManager->getFiles(FALSE);
+$filesArray = $fileManager->getFilesWithCost(-1, FALSE);
 $count = count($filesArray);
 
 ?>

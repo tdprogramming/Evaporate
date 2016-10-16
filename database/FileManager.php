@@ -14,13 +14,13 @@ class FileManager {
     }
     
     public function hasFreeDownloads($productId) {
-        $filesArray = $this->getFiles(FALSE, $productId);
+        $filesArray = $this->getFilesWithCost($productId, FALSE);
         
         return count($filesArray) > 0;
     }
     
     public function hasPremiumDownloads($productId) {
-        $filesArray = $this->getFiles(TRUE, $productId);
+        $filesArray = $this->getFilesWithCost($productId, TRUE);
         
         return count($filesArray) > 0;
     }
@@ -42,7 +42,13 @@ class FileManager {
         $deleteQuery->execute();
     }
     
-    public function isFileFree($fileName, $productId = -1) {
+    public function updateFileCaption($fileId, $fileCaption) {
+        $preparedQuery = $this->connection->prepare("UPDATE files SET caption=? WHERE fileid=?;");
+        $preparedQuery->bind_param('sd', $fileCaption, $fileId);
+        $preparedQuery->execute();
+    }
+    
+    public function isFilePremium($fileName, $productId = -1) {
         if ($productId == -1) {
             $productId = $this->session->getSelectedProductId();
         }
@@ -59,6 +65,25 @@ class FileManager {
         $preparedQuery = $this->connection->prepare("UPDATE files SET premium=? WHERE fileid=?;");
         $preparedQuery->bind_param('dd', $newStatus, $fileId);
         $preparedQuery->execute();
+    }
+    
+    public function getFilesWithCost($productId = -1, $isPremium = FALSE) {
+        if ($productId == -1) {
+            $productId = $this->session->getSelectedProductId();
+        }
+        
+        $result = array();
+        
+        $preparedQuery = $this->connection->prepare("SELECT fileid,caption,filename FROM files WHERE productid=? AND premium=?;");
+        $preparedQuery->bind_param('dd', $productId, $isPremium);
+        $preparedQuery->bind_result($fileId, $caption, $filename);
+        $preparedQuery->execute();
+        
+        while ($preparedQuery->fetch()) {
+            array_push($result, array("fileid" => $fileId, "caption" => $caption, "filename" => $filename));
+        }
+        
+        return $result;
     }
     
     public function getFiles($productId = -1) {
