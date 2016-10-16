@@ -2,13 +2,16 @@
 
 require_once "Connector.php";
 require_once "Credentials.php";
+require_once "SessionHistory.php";
 
 class Session {
     private $connection;
+    private $sessionHistory;
     
     public function __construct() {
         $connector = new Connector();
         $this->connection = $connector->getConnection();
+        $this->sessionHistory = new SessionHistory();
         
         if (session_id() == "") {
             session_start();
@@ -37,6 +40,9 @@ class Session {
         if ($preparedQuery->fetch()) {
             if (password_verify($password, $hashedPassword)) {
                 $_SESSION['loginid'] = $loginId;
+                $this->sessionHistory->logSession($loginId, TRUE);
+            } else {
+                $this->sessionHistory->logSession($loginId, FALSE);
             }
         }
     }
@@ -46,7 +52,7 @@ class Session {
         return $_SESSION['loginid'];
     }
     
-    private function validateSession() {
+    public function validateSession() {
         if ($_SESSION['userAgent'] != sha1($_SERVER['HTTP_USER_AGENT'])) {
             die("Invalid Session.");
         }

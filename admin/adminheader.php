@@ -31,7 +31,8 @@ if (!$session->isLoggedIn()) {
     <body>
         <div class="w3-container w3-blue">
             <span class="w3-left"><h2><a href="index.php">Admin Panel</a></h2></span>
-            <span class="w3-right"><p><a class="w3-btn" href="logout.php">Log Out</a></p></span>
+            <span class="w3-right"><p><a class="w3-btn" style="width: 180px;" href="logout.php">Log Out</a></p></span>
+            <span class="w3-right"><p><a class="w3-btn" style="width: 180px;" href="usersettings.php">Settings</a>&nbsp;</p></span>
         </div>
     </body>
 </html>

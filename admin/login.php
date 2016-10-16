@@ -2,23 +2,38 @@
 
 require_once '../database/Session.php';
 require_once '../database/CodeManager.php';
+require_once '../database/UserManager.php';
+require_once '../database/SessionHistory.php';
 
 $session = new Session();
+$sessionHistory = new SessionHistory();
 $loggedIn = FALSE;
 $loginError = "";
+$userManager = new UserManager();
 
 if ($session->isLoggedIn()) {
     $loggedIn = TRUE;
 }
 else {
     if (isset($_POST["cmdlogin"])) {
-        $session->login(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_URL));
+        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
         
-        if ($session->isLoggedIn()) {
-            $loggedIn = TRUE;
-        } else {
-            $loggedIn = FALSE;
-            $loginError = "Invalid Email and/or password. Please try again.";
+        $loginId = $userManager->getLoginIdFromEmail($email);
+        $loggedIn = FALSE;
+        $loginError = "Invalid Email and/or password. Please try again.";
+        
+        if ($loginId != -1) {
+            if ($sessionHistory->hasTooManyBadLogins($loginId)) {
+                $dateTime = $sessionHistory->nextAvailableLoginTime($loginId);
+                $loginError = "Too many bad logins. You can try to login again at " . $dateTime . ".";
+            } else {
+                $session->login($email, filter_input(INPUT_POST, 'password', FILTER_SANITIZE_URL));
+        
+                if ($session->isLoggedIn()) {
+                    $loggedIn = TRUE;
+                    $loginError = "";
+                }
+            }
         }
     }
 }
@@ -71,6 +86,10 @@ if ($loggedIn == TRUE) {
                 <input class="w3-btn" tabindex="3" accesskey="l" type="submit" name="cmdlogin" value="Login" />
             </p>
         </form>
+        
+        <p>
+            <a class="w3-btn" href="forgotpassword.php">Forgot Password</a>
+        </p>
     </body>
 <?php
 }

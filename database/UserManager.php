@@ -2,6 +2,7 @@
 
 require_once "Connector.php";
 require_once "Credentials.php";
+require_once "Session.php";
 
 class UserManager {
     private $connection;
@@ -11,6 +12,19 @@ class UserManager {
         $connector = new Connector();
         $this->connection = $connector->getConnection();
         $this->session = new Session();
+    }
+    
+    public function getLoginIdFromEmail($email) {
+        $preparedQuery = $this->connection->prepare("SELECT loginid FROM users WHERE email=?;");
+        $preparedQuery->bind_param('s', $email);
+        $preparedQuery->bind_result($loginId);
+        $preparedQuery->execute();
+        
+        if ($preparedQuery->fetch()) {
+            return $loginId;
+        }
+        
+        return -1;
     }
     
     public function changePassword($oldPassword, $newPassword, $confirmNewPassword) {
@@ -44,8 +58,8 @@ class UserManager {
     public function issueTemporaryPassword($userEmail) {
         $this->session->validateSession();
         
-        $userEmail = filter_var($rootEmail, FILTER_SANITIZE_EMAIL);
-        $userEmail = $this->connection->real_escape_string($rootEmail);
+        $userEmail = filter_var($userEmail, FILTER_SANITIZE_EMAIL);
+        $userEmail = $this->connection->real_escape_string($userEmail);
         
         $newPassword = substr(md5(rand()), 0, 7);
         
@@ -59,7 +73,6 @@ class UserManager {
             return;
         }
 
-        // Credentials::dbUserName == "" 
         $headers = "From: " . Credentials::automatedEmail . "\r\n" .
             "Reply-To: " . Credentials::automatedEmail;
 
