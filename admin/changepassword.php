@@ -23,17 +23,17 @@ if (!$passwordChanged) {
     
     <p>
         <label class="w3-label">Current Password</label>
-        <input class="w3-input" tabindex="1" accesskey="c" name="currentpassword" type="text" maxlength="50" id="currentpassword" /> 
+        <input class="w3-input" tabindex="1" accesskey="c" name="currentpassword" type="password" maxlength="50" id="currentpassword" /> 
     </p>
 
     <p>
         <label class="w3-label">New Password</label>
-        <input class="w3-input" tabindex="2" accesskey="n" name="newpassword" type="text" maxlength="50" id="newpassword" /> 
+        <input class="w3-input" tabindex="2" accesskey="n" name="newpassword" type="password" maxlength="50" id="newpassword" /> 
     </p>
 
     <p>
         <label class="w3-label">Confirm New Password</label>
-        <input class="w3-input" tabindex="3" accesskey="o" name="confirmnewpassword" type="text" maxlength="50" id="confirmnewpassword" /> 
+        <input class="w3-input" tabindex="3" accesskey="o" name="confirmnewpassword" type="password" maxlength="50" id="confirmnewpassword" /> 
     </p>
 
     <p>

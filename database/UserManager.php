@@ -36,20 +36,24 @@ class UserManager {
             die("New passwords don't match. Please go back and try again.");
         }
         
-        $hashedPassword = password_hash($oldPassword, PASSWORD_DEFAULT);
         $loginId = $this->session->getLoginId();
         
-        $preparedQuery = $this->connection->prepare("SELECT email FROM users WHERE loginid=? AND password=?;");
-        $preparedQuery->bind_param('ds', $loginId, $hashedPassword);
-        $preparedQuery->bind_result($userEmail);
+        $preparedQuery = $this->connection->prepare("SELECT password FROM users WHERE loginid=?;");
+        $preparedQuery->bind_param('d', $loginId);
+        $preparedQuery->bind_result($hashedPassword);
         $preparedQuery->execute();
         
         if ($preparedQuery->fetch()) {
-            $preparedQuery->close();
-            $hashedNewPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-            $preparedQuery = $this->connection->prepare("UPDATE users SET password=? WHERE loginid=?;");
-            $preparedQuery->bind_param('sd', $hashedNewPassword, $loginId);
-            $preparedQuery->execute();
+            if (password_verify($oldPassword, $hashedPassword)) {
+            
+                $preparedQuery->close();
+                $hashedNewPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+                $preparedQuery = $this->connection->prepare("UPDATE users SET password=? WHERE loginid=?;");
+                $preparedQuery->bind_param('sd', $hashedNewPassword, $loginId);
+                $preparedQuery->execute();
+            } else {
+                die("Wrong current password");
+            }
         } else {
             die("Wrong current password");
         }

@@ -50,4 +50,16 @@ class SessionHistory {
         
         return $dateTime->add(new DateInterval(SessionHistory::BAD_LOGIN_LOCKOUT));
     }
+    
+    public function getNumSessions($loginId) {
+        $preparedQuery = $this->connection->prepare("SELECT * FROM sessions WHERE loginid=?;");
+        $preparedQuery->bind_param("d", $loginId);
+        $preparedQuery->execute();
+        
+        return $preparedQuery->num_rows;
+    }
+    
+    public function getSessionsArray($startIndex, $numRows) {
+        
+    }
 }
