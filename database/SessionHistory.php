@@ -18,24 +18,42 @@ class SessionHistory {
         $preparedQuery->execute();
     }
     
-    public function hasTooManyBadLogins($loginId) {
+    public function getConsecutiveBadLogins($loginId) {
         $preparedQuery = $this->connection->prepare("SELECT correctpassword FROM sessions WHERE loginid=? ORDER BY datetime DESC");
         $preparedQuery->bind_param("d", $loginId);
         $preparedQuery->bind_result($correctPassword);
         $preparedQuery->execute();
+        $preparedQuery->store_result();
+
+        $result = 0;
+        $numRows = $preparedQuery->num_rows;
         
-        if ($preparedQuery->num_rows == 0) {
-            return FALSE;
-        }
-        
-        for ($i = 0; $i < SessionHistory::MAX_BAD_LOGINS; $i++) {
+        for ($i = 0; $i < $numRows; $i++) {
             $preparedQuery->fetch();
+            
+            $result++;
+            
             if ($correctPassword == TRUE) {
-                return FALSE;
+                return $result;
             }
         }
         
-        return TRUE;
+        return $result;
+    }
+    
+    public function hasTooManyBadLogins($loginId) {
+        if ($this->getConsecutiveBadLogins($loginId) > SessionHistory::MAX_BAD_LOGINS) {
+            $dateTime = $this->nextAvailableLoginTime($loginId);
+            $dateTimeNow = new DateTime();
+            
+            if ($dateTime->getTimestamp() < $dateTimeNow->getTimestamp()) {
+                return FALSE;   // can try to login again
+            }
+            
+            return TRUE;
+        }
+        
+        return FALSE;
     }
     
     /**
@@ -48,7 +66,7 @@ class SessionHistory {
         
         $castDateTime = new DateTime($dateTime);
         
-        return $dateTime->add(new DateInterval(SessionHistory::BAD_LOGIN_LOCKOUT));
+        return $castDateTime->add(new DateInterval(SessionHistory::BAD_LOGIN_LOCKOUT));
     }
     
     public function getNumSessions($loginId) {

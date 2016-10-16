@@ -20,12 +20,12 @@ else {
         
         $loginId = $userManager->getLoginIdFromEmail($email);
         $loggedIn = FALSE;
-        $loginError = "Invalid Email and/or password. Please try again.";
+        $loginError = "Invalid Email and/or password. Please try again. ";
         
         if ($loginId != -1) {
             if ($sessionHistory->hasTooManyBadLogins($loginId)) {
                 $dateTime = $sessionHistory->nextAvailableLoginTime($loginId);
-                $loginError = "Too many bad logins. You can try to login again at " . $dateTime . ".";
+                $loginError = "Too many bad logins. You can try to login again at " . $dateTime->format('Y-m-d H:i:s') . ".";
             } else {
                 $session->login($email, filter_input(INPUT_POST, 'password', FILTER_SANITIZE_URL));
         
