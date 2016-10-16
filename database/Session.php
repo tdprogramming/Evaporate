@@ -41,6 +41,11 @@ class Session {
         }
     }
     
+    public function getLoginId() {
+        $this->validateSession();
+        return $_SESSION['loginid'];
+    }
+    
     private function validateSession() {
         if ($_SESSION['userAgent'] != sha1($_SERVER['HTTP_USER_AGENT'])) {
             die("Invalid Session.");
