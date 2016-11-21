@@ -26,12 +26,14 @@ if (isset($_POST["cmdsubmit"])) {
         <?php
             if ($passwordSent) {
                 ?>
-        <p>
-            Thank you. If you email address has a user account with us then a temporary password will have been emailed to you.
-        </p>
-        <p>
-            <a class="w3-btn" href="login.php">Back to Login</a>
-        </p>
+                <div class="w3-container">
+                    <p>
+                        Thank you. If you email address has a user account with us then a temporary password will have been emailed to you.
+                    </p>
+                    <p>
+                        <a class="w3-btn" href="login.php">Back to Login</a>
+                    </p>
+                </div>
                 <?php
             } else {
         ?>

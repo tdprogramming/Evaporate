@@ -144,3 +144,7 @@ function setupCaptionInputs(fileInputs, batchInputs) {
     fileCaptionData = fileInputs;
     batchCaptionData = batchInputs;
 }
+
+function onCreateCodesClick() {
+    document.getElementById('create-codes-modal').style.display='block';
+}

@@ -73,12 +73,13 @@ $productManager->fetchCurrentProduct();
 ?>
 
 <link rel="stylesheet" type="text/css" href="../css/progressbar.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <div class="w3-container">
     <label id="pendingChangesLabel" class="w3-label">All Changes Saved</label>
 </div>
 
-<div class="w3-container">
+<div class="w3-container" style="display: inline-block; vertical-align: top;">
     <h2>Image</h2>
     
     <?php
@@ -90,62 +91,48 @@ $productManager->fetchCurrentProduct();
     ?>
     
     <p>
-        <img src="<?php echo $imagePath; ?>" class="w3-left" style="width:200px;height:200px" />
+        <img src="<?php echo $imagePath; ?>" class="w3-left" style="width:200px;height:200px" onclick="document.getElementById('imageToUpload').click();" />
     </p>
 </div>
-<div class="w3-container">
+<div class="w3-container" style="display:none">
     <form class="w3-form" name="image-form" id="image-form" enctype="multipart/form-data" method="post" action="<?php 
         $selfURL = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);
         echo $selfURL;
         ?>">
         <p>
-            <label class="w3-label">Change Image</label>
+            <input type="file" style="width:400px" name="imageToUpload" id="imageToUpload" onchange="uploadImage();" />
         </p>
-        
-        <p>
-            <input type="file" class="w3-btn" style="width:400px" name="imageToUpload" id="imageToUpload" onchange="imageSelected();" />
-        </p>
-
-        <p>
-            <label class="w3-label" id="imageName"></label>
-        </p>
-        <p>
-            <label class="w3-label" id="imageSize"></label>
-        </p>
-        <p>
-            <label class="w3-label" id="imageType"></label>
-        </p>
-
-        <input type="button" class="w3-btn" style="width:400px" onclick="uploadImage()" value="Upload"/>
     </form>
 </div>
 
-<form class="w3-form" name="product-form" id="product-form" method="post" action="<?php 
-    $selfURL = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);
-    echo $selfURL;
-    ?>">
-    <h2>Product Details</h2>
+<div class="w3-container" style="display: inline-block; vertical-align: top;">
+    <form class="w3-form" name="product-form" id="product-form" method="post" action="<?php
+        $selfURL = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);
+        echo $selfURL;
+        ?>">
+        <h2>Product Details</h2>
 
-    <p>
-        <label class="w3-label">Title</label>
-        <input class="w3-input" onkeydown="onDetailsChange()" tabindex="1" accesskey="t" name="title" type="text" maxlength="50" id="title" value="<?php echo $productManager->getTitle(); ?>" placeholder="Title">
-    </p>
-    
-    <p>
-        <label class="w3-label">Description</label>
-        <textarea class="w3-input" onkeydown="onDetailsChange()" name="description" rows="10" cols="30" tabindex="2" accesskey="d" maxlength="500" id="description" placeholder="Description"><?php echo $productManager->getDescription(); ?></textarea>
-    </p>
+        <p>
+            <label class="w3-label">Title</label>
+            <input class="w3-input" onkeydown="onDetailsChange()" tabindex="1" accesskey="t" name="title" type="text" maxlength="50" id="title" value="<?php echo $productManager->getTitle(); ?>" placeholder="Title">
+        </p>
 
-    <p>
-        <label class="w3-label">Order Link</label>
-        <input class="w3-input" onkeydown="onDetailsChange()" tabindex="3" accesskey="o" name="orderlink" type="text" maxlength="50" id="orderlink" value="<?php echo $productManager->getOrderLink(); ?>" placeholder="Order Link" />
-    </p>
-    
-    <p>
-        <label class="w3-label">Redeem Link</label>
-        <input class="w3-input" onkeydown="onDetailsChange()" tabindex="4" accesskey="r" name="redeemlink" type="text" maxlength="50" id="redeemlink" value="<?php echo $productManager->getRedeemLink(); ?>" placeholder="Redeem Link" />
-    </p>
-</form>
+        <p>
+            <label class="w3-label">Description</label>
+            <textarea class="w3-input" onkeydown="onDetailsChange()" name="description" rows="10" cols="30" tabindex="2" accesskey="d" maxlength="500" id="description" placeholder="Description"><?php echo $productManager->getDescription(); ?></textarea>
+        </p>
+
+        <p>
+            <label class="w3-label">Order Link</label>
+            <input class="w3-input" onkeydown="onDetailsChange()" tabindex="3" accesskey="o" name="orderlink" type="text" maxlength="50" id="orderlink" value="<?php echo $productManager->getOrderLink(); ?>" placeholder="Order Link" />
+        </p>
+
+        <p>
+            <label class="w3-label">Redeem Link</label>
+            <input class="w3-input" onkeydown="onDetailsChange()" tabindex="4" accesskey="r" name="redeemlink" type="text" maxlength="50" id="redeemlink" value="<?php echo $productManager->getRedeemLink(); ?>" placeholder="Redeem Link" />
+        </p>
+    </form>
+</div>
 
 <?php
     $filesArray = $fileManager->getFiles();
@@ -158,37 +145,20 @@ $productManager->fetchCurrentProduct();
     }
 ?>
 
-<div class="w3-container">
-    <h2>Files</h2>
+<div class="w3-container" style="display: inline-block; vertical-align: top;">
+    <h2>Files&nbsp;<i onclick="document.getElementById('fileToUpload').click();" class="material-icons">add_box</i></h2>
 
+    <div class="w3-container" style="display:none">
+        <form class="w3-form" name="upload-form" id="upload-form" enctype="multipart/form-data" method="post" action="<?php
+            $selfURL = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);
+            echo $selfURL;
+            ?>">
+            <p>
+                <input type="file" style="width:400px" name="fileToUpload" id="fileToUpload" onchange="uploadFile();" caption="Add File" />
+            </p>
+        </form>
+    </div>
 
-    <form class="w3-form" name="upload-form" id="upload-form" enctype="multipart/form-data" method="post" action="<?php 
-        $selfURL = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);
-        echo $selfURL;
-        ?>">
-        <p>
-            <label class="w3-label">Add File</label>
-        </p>
-        
-        <p>
-            <input type="file" class="w3-btn" style="width:400px" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" caption="Add File" />
-        </p>
-
-        <p>
-            <label class="w3-label" id="fileName"></label>
-        </p>
-        <p>
-            <label class="w3-label" id="fileSize"></label>
-        </p>
-        <p>
-            <label class="w3-label" id="fileType"></label>
-        </p>
-
-        <input class="w3-btn" style="width:400px" type="button" onclick="uploadFile()" value="Upload"/>
-    </form>
-</div>
-
-<div class="w3-container">
     <table class="w3-table w3-striped">
         <?php
         for ($i = 0; $i < $count; $i++) {
@@ -197,33 +167,30 @@ $productManager->fetchCurrentProduct();
         
         
         <tr>
-        <td width="20%">
+        <td>
             <input class="w3-input" id="fileCaptionInput<?php echo $i; ?>" onkeydown="onDetailsChange()" type="text" value="<?php echo $filesArray[$i]["caption"]; ?>" />
         </td>
-        <td width="20%">
+        <td>
             <label class="w3-label"><?php echo $filesArray[$i]["filename"]; ?></label>
         </td>
-        <td width="20%">
-            <label class="w3-label"><?php echo ($filesArray[$i]["premium"] == TRUE ? "Premium" : "Free"); ?></label>
-        </td>
-        <td width="20%">
+        <td>
             <?php
                 if ($filesArray[$i]["premium"] == TRUE)
                 {
                     ?>
-                        <a class="w3-btn" style="width:180px" href="<?php echo "editproduct.php?command=makefree&fileid=" . $filesArray[$i]["fileid"] ?>">Make Free</a>
+                        <a href="<?php echo "editproduct.php?command=makefree&fileid=" . $filesArray[$i]["fileid"] ?>"><i class="material-icons">lock</i></a>
                     <?php
                 }
                 else
                 {
                     ?>
-                        <a class="w3-btn" style="width:180px" href="<?php echo "editproduct.php?command=makepremium&fileid=" . $filesArray[$i]["fileid"] ?>">Make Premium</a>
+                        <a href="<?php echo "editproduct.php?command=makepremium&fileid=" . $filesArray[$i]["fileid"] ?>"><i class="material-icons">lock_open</i></a>
                     <?php                
                 }
             ?>
         </td>
-        <td width="20%">
-            <a class="w3-btn" style="width:180px" href="<?php echo "editproduct.php?command=delete&fileid=" . $filesArray[$i]["fileid"] ?>">Delete</a>
+        <td>
+            <a style="width:180px" href="<?php echo "editproduct.php?command=delete&fileid=" . $filesArray[$i]["fileid"] ?>"><i class="material-icons">delete</i></a>
         </td>
     </tr>
         
@@ -237,61 +204,66 @@ $productManager->fetchCurrentProduct();
         }
         ?>
     </table>
+
+    <h2>Codes&nbsp;<i onclick="onCreateCodesClick();" class="material-icons">add_box</i></h2>
+    <?php
+    $codeBatchesArray = $codeManager->fetchAllCodeBatches();
+    $count = count($codeBatchesArray);
+
+    if ($count == 0) {
+        $batchCaptionInputDetails = "[]";
+        ?>
+        <p>You have no codes set up yet.</p>
+        <?php
+    } else {
+    $batchCaptionInputDetails = "[";
+    ?>
+
+    <table class="w3-table w3-striped">
+        <?php
+        for ($i = 0; $i < $count; $i++) {
+            $batchCaptionInputDetails .= "{ batchId: " . $codeBatchesArray[$i]["batchid"] . ", inputId: \"batchCaptionInput" . $i . "\", caption: \"" . $codeBatchesArray[$i]["batchname"] . "\"}";
+            ?><tr>
+            <td>
+                <input class="w3-input" id="batchCaptionInput<?php echo $i; ?>" onkeydown="onDetailsChange()" type="text" value="<?php echo $codeBatchesArray[$i]["batchname"]; ?>" />
+            </td>
+            <td>
+                <?php echo "<a target=\"_blank\" style=\"width:180px\" href=\"createcodespdf.php?batchid=" . $codeBatchesArray[$i]["batchid"] ."\">
+<i class=\"material-icons\">file_download</i></a>"; ?>
+            </td>
+            </tr>
+            <?php
+            if ($i < $count - 1) {
+                $batchCaptionInputDetails .= ", ";
+            } else {
+                $batchCaptionInputDetails .= "]";
+            }
+        }}
+        ?>
+    </table>
 </div>
 
-<div class="w3-container">
-    <h2>Codes</h2>
-<?php
-$codeBatchesArray = $codeManager->fetchAllCodeBatches();
-$count = count($codeBatchesArray);
+<div id="create-codes-modal" class="w3-modal">
+    <div class="w3-modal-content">
+        <div class="w3-container">
+            <form class="w3-form" name="product-form" id="product-form" method="post" action="<?php
+            $selfURL = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);
+            echo $selfURL;
+            ?>">
+                <h2>Create Code Batch</h2>
 
-if ($count == 0) {
-    $batchCaptionInputDetails = "[]";
-    ?>
-    <p>You have no codes set up yet.</p>
-    <?php
-} else {
-    $batchCaptionInputDetails = "[";
-?>
+                <p>
+                    <label class="w3-label">Number of codes</label>
+                    <input class="w3-input" tabindex="2" accesskey="c" name="numcodes" type="number" maxlength="50" id="numcodes" value="100" />
+                </p>
 
-<table class="w3-table w3-striped">
-<?php
-for ($i = 0; $i < $count; $i++) {
-    $batchCaptionInputDetails .= "{ batchId: " . $codeBatchesArray[$i]["batchid"] . ", inputId: \"batchCaptionInput" . $i . "\", caption: \"" . $codeBatchesArray[$i]["batchname"] . "\"}";
-    ?><tr>
-        <td width="50%">
-            <input class="w3-input" id="batchCaptionInput<?php echo $i; ?>" onkeydown="onDetailsChange()" type="text" value="<?php echo $codeBatchesArray[$i]["batchname"]; ?>" />
-        </td>
-        <td width="50%">
-            <?php echo "<a target=\"_blank\" class=\"w3-btn\" style=\"width:180px\" href=\"createcodespdf.php?batchid=" . $codeBatchesArray[$i]["batchid"] ."\">Get PDF Of Codes</a>"; ?>
-        </td>
-    </tr>
-<?php    
-    if ($i < $count - 1) {
-        $batchCaptionInputDetails .= ", ";
-    } else {
-        $batchCaptionInputDetails .= "]";
-    }
-}}
-?>
-</table>
-    
-<form class="w3-form" name="product-form" id="product-form" method="post" action="<?php 
-    $selfURL = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);
-    echo $selfURL;
-    ?>">
-    <h2>Create Code Batch</h2>
-  
-    <p>
-        <label class="w3-label">Number of codes</label>
-        <input class="w3-input" tabindex="2" accesskey="c" name="numcodes" type="number" maxlength="50" id="numcodes" value="100" /> 
-    </p>
-
-    <p>
-        <label title="Submit"> 
-        <input class="w3-btn" style="width:180px" tabindex="3" accesskey="s" type="submit" name="cmdgenerate" value="Submit" /> 
-    </p>
-</form>
+                <p>
+                    <label title="Submit">
+                        <input class="w3-btn" style="width:180px" tabindex="3" accesskey="s" type="submit" name="cmdgenerate" value="Submit" />
+                </p>
+            </form>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript" src="../js/upload.js"></script>

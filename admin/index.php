@@ -22,12 +22,14 @@ $count = count($productsArray);
 
 if ($count == 0) {
     ?>
-    <p>You have no products set up yet. Use "Add Product" to add one.
+    <div class="w3-container">
+        <p>You have no products set up yet. Use "Add Product" to add one.</p>
+    </div>
     <?php
 } else {
 ?>
 
-<table class="w3-table w3-striped">
+<table class="w3-table-all w3-hoverable">
 <?php
 for ($i = 0; $i < $count; $i++) {
     ?><tr onclick="window.document.location='<?php echo "editproduct.php?productid=" . $productsArray[$i]["productid"]; ?>';">

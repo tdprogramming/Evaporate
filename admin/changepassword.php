@@ -41,11 +41,13 @@ if (!$passwordChanged) {
     </p>
 </form>
 <?php } else { ?>
-<p>
-    Your password has been changed.
-</p>
+<div class="w3-container">
+    <p>
+        Your password has been changed.
+    </p>
 
-<p>
-    <a class="w3-btn" href="index.php">Home</a>
-</p>
+    <p>
+        <a class="w3-btn" href="index.php">Home</a>
+    </p>
+</div>
 <?php } ?>

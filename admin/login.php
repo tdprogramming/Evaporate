@@ -86,10 +86,12 @@ if ($loggedIn == TRUE) {
                 <input class="w3-btn" tabindex="3" accesskey="l" type="submit" name="cmdlogin" value="Login" />
             </p>
         </form>
-        
-        <p>
-            <a class="w3-btn" href="forgotpassword.php">Forgot Password</a>
-        </p>
+
+        <div class="w3-container">
+            <p>
+                <a class="w3-btn" href="forgotpassword.php">Forgot Password</a>
+            </p>
+        </div>
     </body>
 <?php
 }

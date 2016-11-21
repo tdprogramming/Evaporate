@@ -38,17 +38,21 @@ if ($installSuccess) {
         <div class="w3-container w3-blue">
             <h2>Installation Complete</h2>
         </div>
-        
-        <a class="w3-btn" href="login.php">Click here to login</a>
+
+        <div class=""w3-container"></div>
+            <a class="w3-btn" href="login.php">Click here to login</a>
+        </div>
     <?php        
 } else {
         ?>
         <div class="w3-container w3-blue">
             <h2>Welcome to the Installer</h2>
         </div>
-        <p>
-            <?php echo ($installError ? $installError : "Please enter an admin email address and password."); ?>
-        </p>
+        <div class="w3-container">
+            <p>
+                <?php echo ($installError ? $installError : "Please enter an admin email address and password."); ?>
+            </p>
+        </div>
         <form class="w3-form" name="register-form" id="register-form" method="post" action="<?php 
             $selfURL = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);
             echo $selfURL;
