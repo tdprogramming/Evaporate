@@ -29,6 +29,12 @@ if ($count == 0) {
 } else {
 ?>
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <div class="w3-container">
+        <h2>Products&nbsp;<a href="index.php?createproduct=1"><i class="material-icons">add_box</i></a></h2>
+
+    </div>
 <table class="w3-table-all w3-hoverable">
 <?php
 for ($i = 0; $i < $count; $i++) {
@@ -36,8 +42,8 @@ for ($i = 0; $i < $count; $i++) {
         <td>
             <?php echo $productsArray[$i]["title"]; ?>
         </td>
-        <td>
-            <?php echo "<a class=\"w3-btn\" href=\"deleteproduct.php?productid=" . $productsArray[$i]["productid"] ."\">Delete Product</a>"; ?>
+        <td style="text-align: right;">
+            <?php echo "<a href=\"deleteproduct.php?productid=" . $productsArray[$i]["productid"] ."\"><i class=\"material-icons\">delete</i></a>"; ?>
         </td>
     </tr>
 <?php    
@@ -45,9 +51,3 @@ for ($i = 0; $i < $count; $i++) {
 ?>
 </table>
 <?php } ?>
-
-<div class="w3-container">
-    <p>
-        <a class="w3-btn" href="index.php?createproduct=1">Add Product</a>
-    </p>
-</div>

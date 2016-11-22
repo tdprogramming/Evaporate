@@ -28,11 +28,12 @@ if (!$session->isLoggedIn()) {
     </head>
     <link rel="stylesheet" href="../css/w3.css">
     <link rel="stylesheet" href="../css/links.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <body>
         <div class="w3-container w3-blue">
-            <span class="w3-left"><h2><a href="index.php">Admin Panel</a></h2></span>
-            <span class="w3-right"><p><a class="w3-btn" style="width: 180px;" href="logout.php">Log Out</a></p></span>
-            <span class="w3-right"><p><a class="w3-btn" style="width: 180px;" href="usersettings.php">Settings</a>&nbsp;</p></span>
+            <span class="w3-left"><a href="index.php"><i class="material-icons" style="font-size:48px;">home</i></a></span>
+            <span class="w3-right"><p><a style="width: 180px;" href="logout.php"><i class="material-icons">exit_to_app</i></a></p></span>
+            <span class="w3-right"><p><a style="width: 180px;" href="usersettings.php"><i class="material-icons">settings</i></a>&nbsp;</p></span>
         </div>
     </body>
 </html>

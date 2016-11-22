@@ -5,6 +5,19 @@ require_once '../database/ProductManager.php';
 require_once '../database/Session.php';
 require_once 'adminheader.php';
 
+function isValidFilename($candidate)
+{
+    $parts = explode($candidate);
+    $ext = strtolower($parts[count($parts) - 1]);
+
+    if ($ext == "php" || $ext == "html" || $ext == "htm" || $ext == "js")
+    {
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
 $productManager = new ProductManager();
 $fileManager = new FileManager();
 
@@ -27,20 +40,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_FILES["imageToUpload"])) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_FILES["fileToUpload"])) {
-    echo "Got file";
-    // TODO: validate upload file name
     $uploaddir = '../downloads/product' . $selectedProductId . "/";
     $finalName = basename($_FILES['fileToUpload']['name']);
-    $uploadfile = $uploaddir . $finalName;
-        
-    // Note - need appropriate file size limits here
-    if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $uploadfile)) {
-        // Insert the file name into the files database
-        $productManager->insertFile($finalName, $finalName, TRUE);
-        
-        echo "File is valid, and was successfully uploaded.\n";
-    } else {
-        echo "Possible file upload attack! Error code: " . $_FILES['fileToUpload']['error'];
+
+    if (isValidFilename($finalName) == FALSE) {
+        echo("Invalid File!");
+    }
+    else {
+        $uploadfile = $uploaddir . $finalName;
+
+        // Note - need appropriate file size limits here
+        if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $uploadfile)) {
+            // Insert the file name into the files database
+            $productManager->insertFile($finalName, $finalName, TRUE);
+
+            echo "File is valid, and was successfully uploaded.\n";
+        } else {
+            echo "Possible file upload attack! Error code: " . $_FILES['fileToUpload']['error'];
+        }
     }
 }
 
