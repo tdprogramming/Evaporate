@@ -1,8 +1,16 @@
 <?php
 
+require_once '../database/Credentials.php';
 require_once '../database/Session.php';
 require_once '../database/CodeManager.php';
 require_once '../database/AdminInstaller.php';
+
+if (Credentials::adminOverHttps == TRUE && (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == "off")) {
+    $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    header('HTTP/1.1 301 Moved Permanently');
+    header('Location: ' . $redirect);
+    exit();
+}
 
 $adminInstaller = new AdminInstaller();
 
